@@ -1,16 +1,16 @@
 {
   "contractName": "ABC",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ABC.sol\":\"ABC\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ABC.sol\":{\"keccak256\":\"0xf333b5f936f7ed4caad234847681b851502a465f6fef195f691a1a77c4c3e081\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ec06b0a139ee8a0f1b785e33dac9ed1d3bd76e5d87958b15741f7ccb22b529a\",\"dweb:/ipfs/Qmew1n8e1C3C5ePpFJWTFDTkYmMgk8JBKxXB1dRDBE33AN\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212205899900a8b8b7b8246e6e7e896de8b5ef62b1867c81f2d8d9bd5c76731f6132b64736f6c63430008130033",
-  "deployedBytecode": "0x6080604052600080fdfea26469706673582212205899900a8b8b7b8246e6e7e896de8b5ef62b1867c81f2d8d9bd5c76731f6132b64736f6c63430008130033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ABC.sol\":\"ABC\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ABC.sol\":{\"keccak256\":\"0x42b32046c9eb695ebe6802e67f162fc5165dbdd309fbc7fc81d249f76673e3a8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6fa349c1194540a0d6887fa132fe4de0f947b0413be8fe2462dee21d9e5ab9f4\",\"dweb:/ipfs/QmbQu9GURAytL4HDXUx8u4eQF14JChFubSRggbRJFWQmZZ\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212202e3b7afae78732dfe772750e2b3c4a55b9437a22ab3d79ef0519f6168373bd4864736f6c63430008130033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212202e3b7afae78732dfe772750e2b3c4a55b9437a22ab3d79ef0519f6168373bd4864736f6c63430008130033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [],
-  "sourceMap": "65:15:0:-:0;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "65:15:0:-:0;;;;;",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.5.0 <0.9.0;\n\ncontract ABC {}",
-  "sourcePath": "/Users/aryanbarnwal/Documents/Projects/truffle_ganache/contracts/ABC.sol",
+  "sourceMap": "68:15:0:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "68:15:0:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.5.0 <0.9.0;\r\n\r\ncontract ABC {}",
+  "sourcePath": "C:\\Users\\Aryan\\Desktop\\Truffle_Ganache\\contracts\\ABC.sol",
   "ast": {
     "absolutePath": "project:/contracts/ABC.sol",
     "exportedSymbols": {
@@ -34,7 +34,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:31:0"
+        "src": "33:31:0"
       },
       {
         "abstract": false,
@@ -48,15 +48,15 @@
           2
         ],
         "name": "ABC",
-        "nameLocation": "74:3:0",
+        "nameLocation": "77:3:0",
         "nodeType": "ContractDefinition",
         "nodes": [],
         "scope": 3,
-        "src": "65:15:0",
+        "src": "68:15:0",
         "usedErrors": []
       }
     ],
-    "src": "32:48:0"
+    "src": "33:50:0"
   },
   "compiler": {
     "name": "solc",
@@ -64,7 +64,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.13",
-  "updatedAt": "2023-04-14T07:42:00.443Z",
+  "updatedAt": "2023-04-18T10:44:36.208Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

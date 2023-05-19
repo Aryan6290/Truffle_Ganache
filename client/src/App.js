@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import SimpleStorage from "./contracts/SimpleStorage.json";
+import SimpleStorage from "./contracts/MusiChain.json";
 import Web3 from "web3";
 import "./App.css";
+import { StartingPage } from "./pages/StartingPage/StartingPage";
+import { HomePage } from "./pages/HomePage/HomePage";
 
 function App() {
   const [state, setState] = useState({
@@ -28,8 +30,8 @@ function App() {
   useEffect(() => {
     const { contract } = state;
     async function readData() {
-      const data = await contract.methods.getter().call();
-      setData(data);
+      // const data = await contract.methods.getter().call();
+      // setData(data);
     }
     contract && readData();
   }, [state]);
@@ -39,10 +41,10 @@ function App() {
 
   const weiAmount = Web3.utils.toWei(data.toString(), 'ether');
 
-  await contract.methods.payableFunction("0xF40213b3772064772A1a70e0B62D0f93f85F82F0").send({
-    from: "0x9f96cAd3ce7fA931f0A005c88cA0A179E4edA21E",
-    value: weiAmount
-  });
+  // await contract.methods.payableFunction("0xE1B7e67bA12d19F7fBCFFAACBF8F0dF87D4AdD4d").send({
+  //   from: "0x0F185bc9dC12F8e938FB345dfC38772d11E8a8b9",
+  //   value: weiAmount
+  // });
     // await contract.methods
     //   .setter(data)
     //   .send({ from: "0xaDBC45B40437195Ab4F58a137e3CA0ec8303158f" });
@@ -50,7 +52,8 @@ function App() {
   }
   return (
     <>
-      <h1>Welcome to Dapp</h1>
+    <StartingPage props={state}/>
+      {/* <h1>Welcome to Dapp</h1>
       <div className="App">
         <p className="text">Contract Data : {data}</p>
         <div>
@@ -60,9 +63,11 @@ function App() {
         <button onClick={writeData} className="button button2">
           Change Data
         </button>
-      </div>
+      </div> */}
     </>
   );
 }
 
 export default App;
+
+
