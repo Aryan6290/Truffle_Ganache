@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import SimpleStorage from "./contracts/MusiChain.json";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Web3 from "web3";
 import "./App.css";
+import ReactDOM from "react-dom/client";
 import { StartingPage } from "./pages/StartingPage/StartingPage";
 import { HomePage } from "./pages/HomePage/HomePage";
+import { LoginPage } from "./pages/LoginPage/LoginPage";
+import { MainPage } from "./pages/MainPage/MainPage";
+import { addUsers, getUsers } from "./utils/mongo";
 
 function App() {
   const [state, setState] = useState({
@@ -22,23 +27,17 @@ function App() {
         SimpleStorage.abi,
         deployedNetwork.address
       );
-      console.log(contract);
+
+
       setState({ web3: web3, contract: contract });
+
     }
     provider && template();
   }, []);
-  useEffect(() => {
-    const { contract } = state;
-    async function readData() {
-      // const data = await contract.methods.getter().call();
-      // setData(data);
-    }
-    contract && readData();
-  }, [state]);
+
   async function writeData() {
     const { contract } = state;
     const data = document.querySelector("#value").value;
-
   const weiAmount = Web3.utils.toWei(data.toString(), 'ether');
 
   // await contract.methods.payableFunction("0xE1B7e67bA12d19F7fBCFFAACBF8F0dF87D4AdD4d").send({
@@ -51,23 +50,15 @@ function App() {
     window.location.reload();
   }
   return (
-    <>
-    <StartingPage props={state}/>
-      {/* <h1>Welcome to Dapp</h1>
-      <div className="App">
-        <p className="text">Contract Data : {data}</p>
-        <div>
-          <input type="text" id="value" required="required"></input>
-        </div>
-
-        <button onClick={writeData} className="button button2">
-          Change Data
-        </button>
-      </div> */}
-    </>
+    <BrowserRouter>
+  <Routes>
+    <Route path="/" element={<LoginPage props={state} />}/>
+    <Route path="home" element={<HomePage />}/>
+    <Route path="ABOUT" element={<LoginPage />}/>
+  </Routes>
+    </BrowserRouter>
   );
 }
-
 export default App;
 
 

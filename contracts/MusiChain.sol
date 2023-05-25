@@ -1,7 +1,7 @@
 pragma solidity ^0.8.18;
-
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract MusiChain{
-
+  uint idxz = 0;
    Music[] public songs;
    mapping(bytes32 => Music) songInfo;
    mapping(address => User) userInfo;
@@ -14,13 +14,14 @@ contract MusiChain{
 
    struct Music {
     bool registered;
-    
     bytes32 ID;
     string name;
     string fileURL1;
     uint price;
+    string usertype;
     address owner;
     address[] licenseHoldersList;
+    address[] shareholders;
     mapping(address => bool) licenseHolders;
   }
 
@@ -33,12 +34,29 @@ contract MusiChain{
       string[] uploadedSongs;
     }
 
-  function registerUser(string memory name, string memory password) public {
-    userInfo[msg.sender].registered = true;
-    userInfo[msg.sender].name = name;
-    userInfo[msg.sender].password = password;
-
+  function registerUser(string memory name, string memory password,address ad) public returns (bool) {
+    userInfo[ad].registered = true;
+    userInfo[ad].name = name;
+    userInfo[ad].password = password;
+    return userInfo[ad].registered;
   }
+
+  function loginUser(string memory name, string memory password, address ad){
+    require(userInfo[ad].registered == false, "User not registered")
+    require(userInfo[ad].password != password, "Password is wrong")
+    return true;
+  }
+  function bytes32ToString(bytes32 _bytes32) public pure returns (string memory) {
+        uint8 i = 0;
+        while(i < 32 && _bytes32[i] != 0) {
+            i++;
+        }
+        bytes memory bytesArray = new bytes(i);
+        for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+        return string(bytesArray);
+    }
   function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
         if (_i == 0) {
             return "0";
@@ -79,11 +97,10 @@ function char(bytes1 b) internal pure returns (bytes1 c) {
 }
 
 
-  function buyLicense(bytes32 songID) public payable {
+  function buyLicense(bytes32 songID, address ad) public payable {
     uint price = songInfo[songID].price;
-    require(userInfo[msg.sender].registered == true,"User is not registered!");
     require(msg.value >= price,"Amount sent is less than required amount for the song");
-    userInfo[msg.sender].purchasedSongs.push(songID);
+    userInfo[ad].purchasedSongs.push(songID);
 
     songInfo[songID].licenseHolders[msg.sender] = true;
     songInfo[songID].licenseHoldersList.push(msg.sender);
@@ -96,20 +113,32 @@ function char(bytes1 b) internal pure returns (bytes1 c) {
 
   function payRoyalty(bytes32 songID, uint amount) private {
     address owner = songInfo[songID].owner;
-    payable(owner).transfer(amount);
+    for(uint i = 0; i < songInfo[songID].shareholders.length; i++){
+    payable(songInfo[songID].shareholders[i]).transfer(amount/songInfo[songID].shareholders.length);
+    }
+    
   }
 
 
-  function addMusic(string memory name, string  memory URL1,uint price) public {
-    bytes32 songID = keccak256(abi.encodePacked(name));
+  function addMusic(string memory name, string  memory URL1,uint price, address[] memory sh, string memory isrc) public {
+    bool found = false;
+    bytes32 songID = keccak256(abi.encodePacked(isrc));
+    for(uint i=0;i<songs.length;i++){
+      if(songs[i].ID == songID){
+        found = true;
+      }
+    }
+    require(found == false,"Song already present");
     songInfo[songID].owner = msg.sender;
     songInfo[songID].registered = true;
     songInfo[songID].ID = songID;
     songInfo[songID].name = name;
     songInfo[songID].price = price;
+    songInfo[songID].shareholders = sh;
     songInfo[songID].fileURL1 = URL1;
     userInfo[msg.sender].uploadedSongs.push(name);
-    uint256 idx = songs.length;
+    uint256 idx = idxz;
+    idxz+=1;
     songs.push();
     Music storage d = songs[idx];
     d.name = songInfo[songID].name;
@@ -117,28 +146,34 @@ function char(bytes1 b) internal pure returns (bytes1 c) {
     d.ID =songInfo[songID].ID;
     d.price = songInfo[songID].price;
     d.fileURL1 = songInfo[songID].fileURL1;
+    d. shareholders = songInfo[songID].shareholders;
     emit registerEvent(songID);
   }
 
   function getSongList() public view returns (string[] memory) {
-    string[] memory response = new string[](songs.length*3 +1 );
+    string[] memory response = new string[](songs.length*4 +1 );
     uint idx = 0;
     for (uint i = 0; i < songs.length; i++) {
       Music storage song = songs[i];
       response[idx]= song.name;
       response[idx+1]= uint2str(song.price);
       response[idx+2]= toAsciiString(song.owner);
-      idx+=3;
+      response[idx+3]=  Strings.toHexString(uint256(song.ID), 32);
+
+      idx+=4;
 
     }
 
     return response;
   }
 
-  function getPurchasedList() public view returns (bytes32[] memory){
-    return userInfo[msg.sender].purchasedSongs;
+  function getPurchasedList(address ad) public view returns (bytes32[] memory){
+    return userInfo[ad].purchasedSongs;
   }
   function getMySongs() public view returns (string[] memory){
     return userInfo[msg.sender].uploadedSongs;
+  }
+  function ifUserRegistered(address ad) public view returns (bool){
+    return userInfo[ad].registered;
   }
 }

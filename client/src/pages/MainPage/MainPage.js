@@ -1,16 +1,15 @@
-import React, { useState,useEffect } from 'react'
-import {useLocation} from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import './style.css'
 import Web3 from "web3";
-import {initialiseContract,getContract} from '../../utils/music'
+import SimpleStorage from "../../contracts/MusiChain.json";
 var jsmediatags = require("jsmediatags");
 class Song {
-  id;
-  name;
-  price;
-  owner;
-};
-export const HomePage = () => {
-    const location = useLocation();
+    id;
+    name;
+    price;
+    owner;
+  };
+export const MainPage = () => {
     const [artist,setArtist] = useState('');
     const [lyrics, setLyrics]= useState('');
     const [album, setAlbum] = useState('');
@@ -23,25 +22,43 @@ export const HomePage = () => {
     
     const [songs,setSongs] = useState([])
 
-
+    useEffect(() => {
+      const provider = new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545");
+  
+      async function template() {
+        const web3 = new Web3(provider);
+        const networkId = await web3.eth.net.getId();
+        const deployedNetwork = SimpleStorage.networks[networkId];
+        const contract = new web3.eth.Contract(
+          SimpleStorage.abi,
+          deployedNetwork.address
+        );
+        console.log(contract);
+        setState({ web3: web3, contract: contract });
+      }
+      provider && template();
+    }, []);
+    useEffect(() => {
+      const { contract } = state;
+      async function readData() {
+        // const data = await contract.methods.getter().call();
+        // setData(data);
+      }
+      contract && readData();
+    }, [state]);
     const buySong = async(index)=>{
-      const userId =(location.state.userId)
-      console.log("usereid",userId)
-      console.log("contract",location.state.contract)
-      // const id = songs[index].id;
-
-
-      // const contract = location.state.contract;
-      // console.log(songs[index].id,songs[index].price)
-      // const weiAmount = Web3.utils.toWei(songs[index].price.toString(), 'ether');
-      // await contract.methods.buyLicense(id,userId).send({
-      //   from: userId,
-      //   value: weiAmount,
-      //   gas: 4700000,
-      //   gasPrice: '2000000000'
-      // });
-      // const results =await contract.methods.getPurchasedList('0x6511d573e9748Fc90641483121C06d70A4Bd2fb4').call()
-      // console.log(results)
+      const id = songs[index].id;
+      const { contract } = state;
+      console.log(songs[index].id,songs[index].price)
+      const weiAmount = Web3.utils.toWei(songs[index].price.toString(), 'ether');
+      await contract.methods.buyLicense(id).send({
+        from: "0x6511d573e9748Fc90641483121C06d70A4Bd2fb4",
+        value: weiAmount,
+        gas: 4700000,
+        gasPrice: '2000000000'
+      });
+      const results =await contract.methods.getPurchasedList('0x6511d573e9748Fc90641483121C06d70A4Bd2fb4').call()
+      console.log(results)
 
     }
     const registerUser = async()=>{
@@ -51,7 +68,6 @@ export const HomePage = () => {
         gas: 4700000,
         gasPrice: '2000000000'
       });
-
     }
     async function writeData() {
       const { contract } = state;
@@ -71,9 +87,8 @@ export const HomePage = () => {
     }
 
     const handleFileChange = async(event) => {
-      console.log(location)
         const file = event.target.files[0];
-        const contract= getContract();
+        const { contract } = state;
       //   console.log("herse it is", contract)
       //   const results = await acoustid(file);
       //   const fingerprint = results[0].id;
@@ -89,7 +104,7 @@ export const HomePage = () => {
             setLyrics(lyrics);
             setTitle(file.name)
             console.log("okay")
-            await contract.methods.addMusic(file.name,artist,2).send({from : '0xa33F845c860c014C5504939588F9620a2eFd7288',  gas: 4700000,
+            await contract.methods.addMusic(file.name,artist,2).send({from : "0x0aEa367569f71B64dcc3856e4C2f72f1fc7d0875",  gas: 4700000,
             gasPrice: '2000000000'});
             console.log("okaye2")
             // let songs = await contract.methods.getMySongs().call()
@@ -118,22 +133,15 @@ export const HomePage = () => {
         
 
       };
-      
+    
   return (
     <div>
-      <input type="file" accept="audio/mp3" onChange={handleFileChange} />
-      <div>
-        <p>Artist: {artist}</p>
-        <p>Album: {album}</p>
-        <p>Lyrics: {lyrics}</p>
-
-      <h2>Current songs</h2>
+      <input type="file" accept="audio/mp3"  />
       {songs.map((item,index)=><div class="songItem">
-                        <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/artistic-album-cover-design-template-d12ef0296af80b58363dc0deef077ecc_screen.jpg?ts=1561488440" alt="1"/>
+                        <img src="./covers/1.jpg" alt="1"/>
                         <span class="songName">{item.name}</span>
-                        <span class="songlistplay"><button class="button" onClick={()=>buySong(index)}>Buy</button></span>
+                        <span class="songlistplay"><button class="button" role="button">Buy</button></span>
                 </div>)}
-      </div>
     </div>
   )
 }
